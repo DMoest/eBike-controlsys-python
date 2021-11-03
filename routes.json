@@ -1,0 +1,14 @@
+[
+    {
+        "route": [
+            {"lat": 63.825611, "long": 20.258695, "stop": false, "duration": false},
+            {"lat": 63.828006, "long": 20.244590, "stop": false, "duration": false},
+            {"lat": 63.829330, "long": 20.248157, "stop": false, "duration": false},
+            {"lat": 63.828357, "long": 20.249773, "stop": false, "duration": false},
+            {"lat": 63.827997, "long": 20.250217, "stop": false, "duration": false},
+            {"lat": 63.827166, "long": 20.255416, "stop": false, "duration": false},
+            {"lat": 63.826306, "long": 20.254651, "stop": false, "duration": false},
+            {"lat": 63.825611, "long": 20.258695, "stop": false, "duration": false}
+        ]
+    }
+]
