@@ -7,19 +7,28 @@ import json
 import random
 
 class BikeController:
-    routes = []
+    """
+    Represents a group of persons running individual bike objects.
+    """
+
+    routes_by_city = {}
 
     def __init__(self):
+        # Load all predefined routes by city from JSON.
         self.loadJson()
 
     def run(self, num_bikes):
+        """
+        Runs specified number of bikes with random route and
+        speed for every bike.
+        """
         bikes = []
         print("Calculating routes...")
         
         for i in range(num_bikes):
             speed = random.randint(5, 20)
-            route_idx = random.randint(0, len(self.routes[0]["cities"]["umea"]) - 1)
-            route = self.routes[0]["cities"]["umea"][route_idx]
+            route_idx = random.randint(0, len(self.routes_by_city.get("umea")) - 1)
+            route = self.routes_by_city.get("umea")[route_idx]
             points = self.calculate_route(route, speed)
             bike = Bike(i, speed, points)
             bike.start()
@@ -28,6 +37,10 @@ class BikeController:
         self.start_bike(bikes) 
 
     def calculate_route(self, route, speed):
+        """
+        Calculates intermedate points betwen the endpoints given
+        in de supplied route.
+        """
         # define the WGS84 ellipsoid
         geod = Geodesic.WGS84
         points = []
@@ -46,6 +59,10 @@ class BikeController:
         return points
 
     def start_bike(self, bikes):
+        """
+        Starts all bikes and bulk updates their position according
+        to respective route every second.
+        """
         route_list = []
         for bike in bikes:
             route_list.append(bike.get_route())
@@ -62,6 +79,9 @@ class BikeController:
             
 
     def moveBike(self, bike, loc):
+        """
+        Moves a bike object to a new location.
+        """
         bike.set_position(loc)
         bike.printLocation()
         if not bike.isMoving:
@@ -70,7 +90,16 @@ class BikeController:
             bike.start()
         
     def loadJson(self):
+        """
+        Loads the predefined routes from routes.json.
+        """
+        cities_with_routes = {}
+
         with open('routes.json') as fh:
             data = json.load(fh)
-            for route in data:
-                self.routes.append(route)
+            cities = data[0]["cities"]
+
+            for key in cities.keys():
+                cities_with_routes[key] = cities[key]
+
+            self.routes_by_city = cities_with_routes            

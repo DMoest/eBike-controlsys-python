@@ -1,10 +1,12 @@
-
+"""
+Represents an individual bike object.
+"""
 class Bike():
     _id = None
-    position = None
-    _speed = None
-    isMoving = False
-    route = None
+    position = None #Current lat/long position.
+    _speed = None #Current speed in km/h.
+    isMoving = False #Is the bike currently moving?
+    route = None #The route calculated for this bike.
 
     def __init__(self, id, speed, route):
         self._id = id
@@ -27,8 +29,11 @@ class Bike():
         return self.route
 
     def printLocation(self):
-            print ("{:s} {:.5f} {:.5f}".format(
-                str(self._id), self.position['lat2'], self.position['lon2']))
+        """
+        Prints current latitude and longitude of the bike.
+        """
+        print ("{:s} {:.5f} {:.5f}".format(
+            str(self._id), self.position['lat2'], self.position['lon2']))
 
 
 
