@@ -1,12 +1,16 @@
-"""
-Represents an individual bike object.
-"""
+import helpers
+import random
+
 class Bike():
+    """
+    Represents an individual bike object.
+    """
     _id = None
     position = None #Current lat/long position.
     _speed = None #Current speed in km/h.
     isMoving = False #Is the bike currently moving?
     route = None #The route calculated for this bike.
+    route_index = 0
 
     def __init__(self, id, speed, route):
         self._id = id
@@ -27,6 +31,27 @@ class Bike():
 
     def get_route(self):
         return self.route
+
+    def get_route_index(self):
+        return self.route_index
+
+    def reset_route(self, route):
+        self.route_index = 0
+        self.route = route
+
+    def move_bike(self):
+        """
+        Moves a bike object to a new location.
+        """
+        self.route_index += 1
+        if self.route_index == len(self.route):
+            self.printLocation()
+            speed = random.randint(5, 20)
+            new_route = helpers.calc_random_route_by_city("umea", speed)
+            self.reset_route(new_route)
+        else:
+            self.position = self.route[self.route_index]
+            self.printLocation()
 
     def printLocation(self):
         """
