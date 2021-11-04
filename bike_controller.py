@@ -3,15 +3,11 @@ from bike import Bike
 from geographiclib.geodesic import Geodesic
 import time
 import math
-import asyncio
 import json
 import random
-import multiprocessing
 
 class BikeController:
     routes = []
-    umeaBasePosition = (63.831550, 20.235777)
-    
 
     def __init__(self):
         self.loadJson()
@@ -22,14 +18,14 @@ class BikeController:
         
         for i in range(num_bikes):
             speed = random.randint(5, 20)
-            points = self.calculate_route(self.routes[0], speed)
+            route_idx = random.randint(0, len(self.routes[0]["cities"]["umea"]) - 1)
+            route = self.routes[0]["cities"]["umea"][route_idx]
+            points = self.calculate_route(route, speed)
             bike = Bike(i, speed, points)
             bike.start()
             bikes.append(bike)
 
-        self.start_bike(bikes)
-            
-            
+        self.start_bike(bikes) 
 
     def calculate_route(self, route, speed):
         # define the WGS84 ellipsoid
