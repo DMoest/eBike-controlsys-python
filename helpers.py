@@ -2,7 +2,6 @@ from geographiclib.geodesic import Geodesic
 import math
 import json
 import random
-
 def calculate_route(route, speed):
     """
     Calculates intermedate points betwen the endpoints given

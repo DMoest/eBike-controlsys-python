@@ -11,13 +11,14 @@ class BikeController:
 
     routes_by_city = {}
 
-    def __init__(self):
-        # Load all predefined routes by city from JSON.
-        helpers.loadJson()
+    def __init__(self, calculated_routes):
+        self.routes_by_city = calculated_routes
 
     def reset_bike(self, bike):
         speed = random.randint(5, 20)
-        bike.reset_route(helpers.calc_random_route_by_city("umea"), speed)
+        route_idx = random.randint(0, len(self.routes_by_city["umea"]) - 1)
+        points = self.routes_by_city["umea"][route_idx][speed]
+        bike.reset_route(points)
 
     def run(self, num_bikes):
         """
@@ -29,7 +30,8 @@ class BikeController:
         
         for i in range(num_bikes):
             speed = random.randint(5, 20)
-            points = helpers.calc_random_route_by_city("umea", speed)
+            route_idx = random.randint(0, len(self.routes_by_city["umea"]) - 1)
+            points = self.routes_by_city["umea"][route_idx][speed]
             bike = Bike(i, speed, points)
             bike.start()
             bikes.append(bike)
