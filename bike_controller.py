@@ -64,7 +64,11 @@ class BikeController:
                     "lat": pos["lat2"]
                 }
                 bike.move_bike()
-            ref = db.reference("/bikes/")
-            ref.set(bike_objects)
 
-            time.sleep(1)        
+            self.update_db(bike_objects)
+
+            time.sleep(1)
+
+    def update_db(self, bike_objects):
+        ref = db.reference("/bikes/")
+        ref.set(bike_objects)

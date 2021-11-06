@@ -19,14 +19,14 @@ class Bike():
         self.route = route
         self.db = database
 
-    def get_id(self):
-        return self._id
-
     def start(self):
         self.isMoving = True
 
     def stop(self):
         self.isMoving = False
+
+    def get_id(self):
+        return self._id
 
     def getSpeed(self):
         return self._speed
@@ -59,10 +59,3 @@ class Bike():
             self.reset_route(new_route)
         else:
             self.position = self.route[self.route_index]
-            self.printLocation()
-
-    def printLocation(self):
-        """
-        Prints current latitude and longitude of the bike.
-        """
-        pass
