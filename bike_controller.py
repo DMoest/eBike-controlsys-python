@@ -1,11 +1,11 @@
 from asyncio.tasks import sleep
+from firebase_admin import db
+from db import Firebase
 import time
 import random
 from bike import Bike
-from db import Firebase
-import helpers
 
-db = Firebase()
+db_init = Firebase()
 
 class BikeController:
     """
@@ -46,6 +46,8 @@ class BikeController:
         to respective route every second.
         """
         route_list = []
+        bike_objects = {}
+
         for bike in bikes:
             route_list.append(bike.get_route())
 
@@ -54,5 +56,15 @@ class BikeController:
         for i in range(len(longest_idx)):
             bike.start
             for bike in bikes:
+                pos = bike.get_position()
+                id = bike.get_id()
+                bike_objects["bike" + str(id)] = {
+                    "id": id,
+                    "lan": pos["lon2"],
+                    "lat": pos["lat2"]
+                }
                 bike.move_bike()
-            time.sleep(1)           
+            ref = db.reference("/bikes/")
+            ref.set(bike_objects)
+
+            time.sleep(1)        

@@ -11,7 +11,7 @@ class Firebase:
             'databaseURL':'https://bike-test-dfe8c-default-rtdb.firebaseio.com/'
             })
 
-    def setPosition(position):
-        ref = db.reference("/bikes/")
+    def setPositions(position, location):
+        ref = db.reference(location)
         ref.set(position)
 
