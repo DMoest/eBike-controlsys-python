@@ -60,7 +60,9 @@ class Bike():
         """
         Prints current latitude and longitude of the bike.
         """
-        ref = db.reference("/bikes/")
+        ref = db.reference("/bikes/bike" + str(self._id))
         ref.set({
-            "lat": self.position['lat2'],
-            "long": self.position['lon2']})
+            "id": self._id,
+            "lan": self.position['lon2'],
+            "lat": self.position['lat2']
+            })
