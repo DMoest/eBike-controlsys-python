@@ -1,3 +1,4 @@
+from firebase_admin import db
 import helpers
 import random
 
@@ -11,11 +12,13 @@ class Bike():
     isMoving = False #Is the bike currently moving?
     route = None #The route calculated for this bike.
     route_index = 0
+    db = None
 
-    def __init__(self, id, speed, route):
+    def __init__(self, id, speed, route, database):
         self._id = id
         self._speed = speed
         self.route = route
+        self.db = database
 
     def start(self):
         self.isMoving = True
@@ -57,9 +60,7 @@ class Bike():
         """
         Prints current latitude and longitude of the bike.
         """
-        print ("{:s} {:.5f} {:.5f}".format(
-            str(self._id), self.position['lat2'], self.position['lon2']))
-
-
-
-
+        ref = db.reference("/bikes/")
+        ref.set({
+            "lat": self.position['lat2'],
+            "long": self.position['lon2']})

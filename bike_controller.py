@@ -1,8 +1,11 @@
 from asyncio.tasks import sleep
-from bike import Bike
-import helpers
 import time
 import random
+from bike import Bike
+from db import Firebase
+import helpers
+
+db = Firebase()
 
 class BikeController:
     """
@@ -26,13 +29,12 @@ class BikeController:
         speed for every bike.
         """
         bikes = []
-        print("Calculating routes...")
         
         for i in range(num_bikes):
             speed = random.randint(5, 20)
             route_idx = random.randint(0, len(self.routes_by_city["umea"]) - 1)
             points = self.routes_by_city["umea"][route_idx][speed]
-            bike = Bike(i, speed, points)
+            bike = Bike(i, speed, points, db)
             bike.start()
             bikes.append(bike)
 
