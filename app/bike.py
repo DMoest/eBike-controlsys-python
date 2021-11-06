@@ -1,4 +1,3 @@
-import helpers
 import random
 
 class Bike():

@@ -1,9 +1,9 @@
 from asyncio.tasks import sleep
 from firebase_admin import db
-from db import Firebase
+from db.db import Firebase
 import time
 import random
-from bike import Bike
+from app.bike import Bike
 
 db_init = Firebase()
 

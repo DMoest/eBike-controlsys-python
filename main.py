@@ -1,5 +1,5 @@
-from bike_controller import BikeController
-import helpers
+from app.bike_controller import BikeController
+import utils.helpers as helpers
 import sys
 
 def main():
