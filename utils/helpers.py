@@ -49,7 +49,8 @@ def calc_random_route_by_city(city):
 
     for city in base_routes.keys():
         calculated_routes[city] = {}
-        for i, route in enumerate(base_routes[city]):
+        calculated_routes["parkings"] = base_routes[city]["parkings"]
+        for i, route in enumerate(base_routes[city]["routes"]):
             calculated_routes[city][i] = {}
             for speed in range(5, 25):
                 calculated_routes[city][i][speed] = calculate_route(route, speed)
