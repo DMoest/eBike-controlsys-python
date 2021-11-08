@@ -11,7 +11,7 @@ def calculate_route(route, speed):
     geod = Geodesic.WGS84
     points = []
 
-    interval = speed * 0.277777778 # Interval for coordinates along the line between endpoints in meters.
+    interval = (speed * 0.277777778) * 10 # Interval for coordinates along the line between endpoints in meters.
     trip = route["route"]
     idx = 1
     while idx <= len(trip) - 1:

@@ -73,7 +73,7 @@ class BikeController:
 
             self.update_db(bike_objects)
 
-            time.sleep(1)
+            time.sleep(10)
 
     def update_db(self, bike_objects):
         ref = db.reference("/bikes/")
