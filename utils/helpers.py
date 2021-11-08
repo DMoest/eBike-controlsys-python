@@ -1,7 +1,6 @@
 from geographiclib.geodesic import Geodesic
 import math
 import json
-import random
 
 def calculate_route(route, speed):
     """
@@ -40,16 +39,19 @@ def loadJson():
 
         return cities_with_routes
 
-def calc_random_route_by_city(city, speed):
+def calc_random_route_by_city(city):
     """
     Gets a random route from the specified city and returns calculated
     intermediate points for the route.
     """
-    speed = random.randint(5, 20)
+    base_routes = loadJson()
+    calculated_routes = {}
 
-    routes_by_city = loadJson()
-    route_idx = random.randint(0, len(routes_by_city.get("umea")) - 1)
-    route = routes_by_city.get(city)[route_idx]
-    points = calculate_route(route, speed)
-
-    return points
+    for city in base_routes.keys():
+        calculated_routes[city] = {}
+        for i, route in enumerate(base_routes[city]):
+            calculated_routes[city][i] = {}
+            for speed in range(5, 25):
+                calculated_routes[city][i][speed] = calculate_route(route, speed)
+    
+    return calculated_routes

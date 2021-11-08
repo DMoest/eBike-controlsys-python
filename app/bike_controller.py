@@ -19,10 +19,13 @@ class BikeController:
 
     def reset_bike(self, bike):
         speed = random.randint(5, 20)
+        should_reverse = random.randint(0, 1)
         route_idx = random.randint(0, len(self.routes_by_city["umea"]) - 1)
         points = self.routes_by_city["umea"][route_idx][speed]
+        if should_reverse == 1:
+            points.reverse()
         bike.reset_route(points)
-
+            
     def run(self, num_bikes):
         """
         Runs specified number of bikes with random route and
@@ -32,8 +35,11 @@ class BikeController:
         
         for i in range(num_bikes):
             speed = random.randint(5, 20)
+            should_reverse = random.randint(0, 1)
             route_idx = random.randint(0, len(self.routes_by_city["umea"]) - 1)
             points = self.routes_by_city["umea"][route_idx][speed]
+            if should_reverse == 1:
+                points.reverse()
             bike = Bike(i, speed, points, db)
             bike.start()
             bikes.append(bike)

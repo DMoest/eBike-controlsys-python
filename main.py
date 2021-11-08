@@ -7,18 +7,12 @@ def main():
     Initializes and runs a new BikeController.
     """
     NUM_BIKES = int(sys.argv[1])
-    base_routes = helpers.loadJson()
+    calculated_routes = helpers.calc_random_route_by_city("umea")
 
-    calculated_routes = {}
 
-    for city in base_routes.keys():
-        calculated_routes[city] = {}
-        for i, route in enumerate(base_routes[city]):
-            calculated_routes[city][i] = {}
-            for speed in range(5, 25):
-                calculated_routes[city][i][speed] = helpers.calculate_route(route, speed)
-            print(calculated_routes[city][i].keys())
+
     bike = BikeController(calculated_routes)
+    print("Running simulation... [ctrl - c] to quit")
     bike.run(NUM_BIKES)
         
 if __name__ == "__main__":
