@@ -10,7 +10,7 @@ class Bike():
     isMoving = False #Is the bike currently moving?
     route = None #The route calculated for this bike.
     route_index = 0
-    db = None
+    parking_approved = False
 
     def __init__(self, id, speed, route, database):
         self._id = id
@@ -46,13 +46,20 @@ class Bike():
         self.route_index = 0
         self.route = route
 
+    def check_in_parking_area(self, parkings):
+        self.parking_approved = False
+        for parking in (parkings):
+            if parking[1]["lat"] < self.position["lat2"] < parking[0]["lat"] and\
+                parking[1]["long"] < self.position["lon2"] < parking[0]["long"]:
+                self.parking_approved = True
+                break
+
     def move_bike(self):
         """
         Moves a bike object to a new location.
         """
         self.route_index += 1
         if self.route_index == len(self.route):
-            self.printLocation()
             speed = random.randint(5, 20)
             new_route = helpers.calc_random_route_by_city("umea", speed)
             self.reset_route(new_route)

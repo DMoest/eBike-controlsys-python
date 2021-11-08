@@ -70,8 +70,10 @@ class BikeController:
                     "lat": pos["lat2"]
                 }
                 bike.move_bike()
+                bike.check_in_parking_area(self.routes_by_city["parkings"])
+                print(bike.parking_approved)
 
-            self.update_db(bike_objects)
+            # self.update_db(bike_objects)
 
             time.sleep(10)
 
