@@ -1,4 +1,8 @@
 import random
+import utils.helpers
+import time
+import sys
+from firebase_admin import db
 
 class Bike():
     """
@@ -12,11 +16,10 @@ class Bike():
     route_index = 0
     parking_approved = False
 
-    def __init__(self, id, speed, route, database):
+    def __init__(self, id, speed, route):
         self._id = id
         self._speed = speed
         self.route = route
-        self.db = database
 
     def start(self):
         self.isMoving = True
@@ -58,10 +61,22 @@ class Bike():
         """
         Moves a bike object to a new location.
         """
-        self.route_index += 1
-        if self.route_index == len(self.route):
-            speed = random.randint(5, 20)
-            new_route = helpers.calc_random_route_by_city("umea", speed)
-            self.reset_route(new_route)
-        else:
-            self.position = self.route[self.route_index]
+        while True:
+            self.route_index += 1
+            if self.route_index == len(self.route):
+                speed = random.randint(5, 20)
+                new_route = utils.helpers.calc_random_route_by_city("umea", speed)
+                self.reset_route(new_route)
+            else:
+                self.position = self.route[self.route_index]
+            self.update_db()
+            sys.stdout.flush()
+            time.sleep(10)
+
+    def update_db(self):
+        ref = db.reference("/bikes/" + str(self._id))
+        ref.set({
+            "id": self._id,
+            "lat": self.position["lat2"],
+            "long": self.position["lon2"]
+        })
