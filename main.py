@@ -1,3 +1,4 @@
+from app.customer import Customer
 import utils.helpers as helpers
 import sys
 import random
@@ -9,10 +10,9 @@ from db.db import Firebase
 firebase = Firebase()
 calculated_routes = helpers.calc_random_route_by_city("umea")
 processes = []
+bikes = []
 
 def signal_handler(sig, frame):
-    for process in processes:
-        process.join()
     sys.exit(0)
 
 def init_bike(id):
@@ -29,14 +29,19 @@ def main():
     Initializes and runs a new BikeController.
     """
     NUM_BIKES = int(sys.argv[1])
+    NUM_CUSTOMERS = int(sys.argv[2])
 
     for i in range(NUM_BIKES):
-        bike = init_bike(i)  
-        bike.start()
-        processes.append(Process(target=bike.move_bike))
+        bike = init_bike(i)
+        bikes.append(bike)
+
+    for i in range(NUM_CUSTOMERS):
+        customer = Customer(calculated_routes, i, bikes)
+        processes.append(Process(target=customer.run))
 
     for process in processes:
         process.start()
+
             
         
 if __name__ == "__main__":

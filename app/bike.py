@@ -70,7 +70,6 @@ class Bike():
             else:
                 self.position = self.route[self.route_index]
             self.update_db()
-            sys.stdout.flush()
             time.sleep(10)
 
     def update_db(self):
