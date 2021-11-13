@@ -1,8 +1,6 @@
-import random
-import utils.helpers
-import time
-import sys
+import threading
 from firebase_admin import db
+from threading import Timer
 
 class Bike():
     """
@@ -16,13 +14,15 @@ class Bike():
     route_index = 0
     parking_approved = False
 
-    def __init__(self, id, speed, route):
+    def __init__(self, id, speed):
         self._id = id
         self._speed = speed
-        self.route = route
 
-    def start(self):
+    def start(self, route):
+        self.route = route
+        self.position = route[0]
         self.isMoving = True
+        self.update_db()
 
     def stop(self):
         self.isMoving = False
@@ -57,20 +57,12 @@ class Bike():
                 self.parking_approved = True
                 break
 
-    def move_bike(self):
+    def move_bike(self, location):
         """
         Moves a bike object to a new location.
         """
-        while True:
-            self.route_index += 1
-            if self.route_index == len(self.route):
-                speed = random.randint(5, 20)
-                new_route = utils.helpers.calc_random_route_by_city("umea", speed)
-                self.reset_route(new_route)
-            else:
-                self.position = self.route[self.route_index]
-            self.update_db()
-            time.sleep(10)
+        self.position = location
+        print(str(self._id) + " " + str(self.position["lat2"]) + " " + str(self.position["lon2"]))
 
     def update_db(self):
         ref = db.reference("/bikes/" + str(self._id))
@@ -79,3 +71,5 @@ class Bike():
             "lat": self.position["lat2"],
             "long": self.position["lon2"]
         })
+        t = threading.Timer(30, self.update_db)
+        t.start()

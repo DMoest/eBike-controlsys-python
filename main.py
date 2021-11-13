@@ -13,6 +13,8 @@ processes = []
 bikes = []
 
 def signal_handler(sig, frame):
+    for process in processes:
+        process.terminate()
     sys.exit(0)
 
 def init_bike(id):
@@ -22,7 +24,7 @@ def init_bike(id):
     points = calculated_routes["umea"][route_idx][speed]
     if should_reverse == 1:
         points.reverse()
-    return Bike(id, speed, points)
+    return Bike(id, speed)
 
 def main():
     """
