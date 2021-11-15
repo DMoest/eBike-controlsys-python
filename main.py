@@ -16,6 +16,8 @@ bikes = []
 bikes_in_city = defaultdict(dict)
 
 def signal_handler(sig, frame):
+    for process in processes:
+        process.terminate()
     sys.exit(0)
 
 def init_bike(bike):
