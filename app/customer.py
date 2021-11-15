@@ -1,7 +1,5 @@
-from firebase_admin import db
-from db.db import Firebase
 import random
-from app.bike import Bike
+import time
 
 class Customer:
     """
@@ -11,6 +9,8 @@ class Customer:
     routes_by_city = {}
     _id = None
     bikes = None
+    route = None
+    route_idx = 0
 
     def __init__(self, calculated_routes, id, bikes):
         self.routes_by_city = calculated_routes
@@ -49,10 +49,7 @@ class Customer:
         Starts all bikes and bulk updates their position according
         to respective route every second.
         """
-
-        bike.move_bike()
+        for location in self.route:
+            bike.move_bike(location)
+            time.sleep(10)
         #bike.check_in_parking_area(self.routes_by_city["parkings"])
-
-    def update_db(self, bike_objects):
-        ref = db.reference("/bikes/")
-        ref.set(bike_objects)
