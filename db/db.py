@@ -4,6 +4,10 @@ def getAllBikes():
     r =requests.get('http://ebike_backend:8000/api/bike')
     return r.text
 
+def getAllUsers():
+    r =requests.get('http://ebike_backend:8000/api/user')
+    return r.text
+
 # import firebase_admin
 # from firebase_admin import db
 

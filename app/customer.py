@@ -8,14 +8,14 @@ class Customer:
 
     routes_by_city = {}
     _id = None
-    bikes = None
+    bike = None
     route = None
     route_idx = 0
 
-    def __init__(self, calculated_routes, id, bikes):
+    def __init__(self, calculated_routes, id, bike):
         self.routes_by_city = calculated_routes
         self._id = id
-        self.bikes = bikes
+        self.bike = bike
 
     def reset_bike(self, bike):
         speed = random.randint(5, 20)
@@ -38,11 +38,9 @@ class Customer:
         if should_reverse == 1:
             self.route.reverse()
 
-        bike_idx = random.randint(0, len(self.bikes) - 1)
-        bike = self.bikes[bike_idx]
-        bike.start()
+        self.bike.start()
 
-        self.start_bike(bike)
+        self.start_bike(self.bike)
 
     def start_bike(self, bike):
         """
