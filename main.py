@@ -36,7 +36,7 @@ def main():
     NUM_USERS = int(sys.argv[1])
 
     bikes_data = json.loads(db.db.getAllBikes())["bikes"]
-    users_data = json.loads(db.db.getAllUsers())
+    users_data = json.loads(db.db.getAllUsers()["users"])
     
     for user in users_data:
         if user["city"] == "Umeå":
