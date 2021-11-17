@@ -1,5 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import requests
 import threading
+import random
 
 class Bike():
     """
@@ -12,39 +16,41 @@ class Bike():
     _speed = None #Current speed in km/h.
     _active = False #Is the bike currently moving?
     _parking_approved = False
+    _power_level = 0
+    _is_parking = False
+    _is_charging = True
 
-    def __init__(self, id, speed, city, status, active, position):
+    def __init__(self, id, speed, city, status, active, position, power_level):
         self._id = id
-        self._speed = speed,
-        self._city = city,
-        self._status = status,
+        self._speed = speed
+        self._city = city
+        self._status = status
         self._active = active
         self._position = position
 
     def start(self):
+        """
+        Start the bike and update database.
+        """
         self._active = True
         self.update_db()
 
     def stop(self):
+        """
+        Stop the bike and update database.
+        """
         self._active = False
-
-    def get_id(self):
-        return self._id
-
-    def getSpeed(self):
-        return self._speed
-
-    def set_position(self, position):
-        self._position = position
-    
-    def get_position(self):
-        return self._position
+        self.update_db()
 
     def check_in_parking_area(self, parkings):
+        """
+        Determine if the bike is within any of the approved parking
+        areas supplied.
+        """
         self._parking_approved = False
         for parking in (parkings):
-            if parking[1]["lat"] < self.position["lat2"] < parking[0]["lat"] and\
-                parking[1]["long"] < self.position["lon2"] < parking[0]["long"]:
+            if parking[1]["lat"] < self._position["lat2"] < parking[0]["lat"] and\
+                parking[1]["long"] < self._position["lon2"] < parking[0]["long"]:
                 self._parking_approved = True
                 break
 
@@ -53,8 +59,17 @@ class Bike():
         Moves a bike object to a new location.
         """
         self._position = location
+        self._power_level -= 0.5
+        if self._power_level <= 25:
+            self._is_parking = True
+
+    def charge_bike(self):
+        self._is_charging = True
 
     def update_db(self):
+        """
+        Send request to api to update the bikes info.
+        """
         print(str(self._id) + " " + str(self._position["lat2"]) + " " + str(self._position["lon2"]))
 
         requests.put('http://ebike_backend:8000/api/bike', data ={
@@ -67,9 +82,21 @@ class Bike():
         })
         t = threading.Timer(30, self.update_db)
         t.start()
-        # ref = db.reference("/bikes/" + str(self._id))
-        # ref.set({
-        #     "id": self._id,
-        #     "lat": self.position["lat2"],
-        #     "long": self.position["lon2"]
-        # })
+        
+
+    @classmethod
+    def create_from_json(cls, json_data):
+        """
+        Factory method to create a bike object from JSON.
+        """
+        speed = random.randint(5, 20)
+        power = random.randint(25, 100)
+
+        return cls(
+            json_data["_id"],
+            speed,
+            json_data["city"],
+            json_data["status"],
+            json_data["active"],
+            {"lat2": json_data["latitude"], "lon2": json_data["longitude"]},
+            power)

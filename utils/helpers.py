@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from geographiclib.geodesic import Geodesic
 import math
 import json
@@ -30,7 +33,7 @@ def loadJson():
     """
     cities_with_routes = {}
 
-    with open('routes.json') as fh:
+    with open('routes.json', encoding='utf-8') as fh:
         data = json.load(fh)
         cities = data[0]["cities"]
 
@@ -49,7 +52,7 @@ def calc_random_route_by_city(city):
 
     for city in base_routes.keys():
         calculated_routes[city] = {}
-        calculated_routes["parkings"] = base_routes[city]["parkings"]
+        calculated_routes[city]["parkings"] = base_routes[city]["parkings"]
         for i, route in enumerate(base_routes[city]["routes"]):
             calculated_routes[city][i] = {}
             for speed in range(5, 25):
