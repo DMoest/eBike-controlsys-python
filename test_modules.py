@@ -7,6 +7,12 @@ from unittest.mock import patch
 
 from app.customer import Customer
 
+
+
+######################################### Tests for Bike class #######################################
+
+
+
 class TestBike(unittest.TestCase):
     def test_bike_create(self):
         """
@@ -76,7 +82,9 @@ class TestBike(unittest.TestCase):
         bike = Bike.create_from_json(bike_json)
 
         bike.update_db = MagicMock()
-        bike.start()
+        bike.start_trip = MagicMock()
+        bike.end_trip = MagicMock()
+        bike.start({})
         
         self.assertTrue(bike._active)
         bike.update_db.assert_called_once()
@@ -90,11 +98,16 @@ class TestBike(unittest.TestCase):
         bike = Bike.create_from_json(bike_json)
 
         bike.update_db = MagicMock()
+        bike.start_trip = MagicMock()
+        bike.end_trip = MagicMock()
         bike.stop()
         
         self.assertFalse(bike._active)
         bike.update_db.assert_called_once()
 
+
+
+######################### Tests for Customer class ######################################
 
 
 
@@ -126,6 +139,7 @@ class TestCustomer(unittest.TestCase):
         customer = Customer(routes, 1, bike, user)
 
         bike.start = MagicMock()
+        bike.stop = MagicMock()
         customer.start_bike = MagicMock()
 
         customer.run()
@@ -156,6 +170,8 @@ class TestCustomer(unittest.TestCase):
         customer = Customer(routes, 1, bike, user)
 
         bike.move_bike = MagicMock()
+        bike.start = MagicMock()
+        bike.stop = MagicMock()
 
         customer.start_bike(bike)
         bike.move_bike.assert_called()

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 import requests
 import threading
@@ -18,7 +17,8 @@ class Bike():
     _parking_approved = False
     _power_level = 0
     _is_parking = False
-    _is_charging = True
+    _is_charging = False
+    _user = None
 
     def __init__(self, id, speed, city, status, active, position, power_level):
         self._id = id
@@ -27,12 +27,15 @@ class Bike():
         self._status = status
         self._active = active
         self._position = position
+        self._power_level = power_level
 
-    def start(self):
+    def start(self, user):
         """
         Start the bike and update database.
         """
         self._active = True
+        self._user = user
+        self.start_trip()
         self.update_db()
 
     def stop(self):
@@ -40,6 +43,7 @@ class Bike():
         Stop the bike and update database.
         """
         self._active = False
+        self.end_trip()
         self.update_db()
 
     def check_in_parking_area(self, parkings):
@@ -63,6 +67,9 @@ class Bike():
         if self._power_level <= 25:
             self._is_parking = True
 
+        if self._power_level == 0:
+            self.stop()
+
     def charge_bike(self):
         self._is_charging = True
 
@@ -70,7 +77,7 @@ class Bike():
         """
         Send request to api to update the bikes info.
         """
-        print(str(self._id) + " " + str(self._position["lat2"]) + " " + str(self._position["lon2"]))
+        print(str(self._id) + " Powerlevel: " + str(self._power_level) + " Looking for parking: " + str(self._is_parking) + " Parked: " + str(self._parking_approved) + " Charging: " + str(self._is_charging))
 
         requests.put('http://ebike_backend:8000/api/bike', data ={
             '_id': self._id,
@@ -82,6 +89,27 @@ class Bike():
         })
         t = threading.Timer(30, self.update_db)
         t.start()
+
+    def start_trip(self):
+        requests.post('http://ebike_backend:8000/api/travel', data ={
+            'city': self._city,
+            'user_id': self._user._id,
+            'bike_id': self._id,
+            'status': self._status,
+            'start_longitude': self._position["lon2"],
+            'start_latitude': self._position["lat2"],
+            'price': 0
+        })
+
+    def end_trip(self):
+        requests.put('http://ebike_backend:8000/api/travel', data ={
+            'city': self._city,
+            'user_id': self._user._id,
+            'bike_id': self._id,
+            'status': self._status,
+            'stop_longitude': self._position["lon2"],
+            'stop_latitude': self._position["lat2"],
+        })
         
 
     @classmethod

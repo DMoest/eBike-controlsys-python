@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 import random
 import time
@@ -33,7 +32,8 @@ class Customer:
         Runs specified number of bikes with random route and
         speed for every bike.
         """
-        self.bike.start()
+        self.bike.move_bike(self.route[0])
+        self.bike.start(self.user)
 
         self.start_bike(self.bike)
 
@@ -57,4 +57,6 @@ class Customer:
                     break
             bike.move_bike(location)
             time.sleep(10)
+        
+        bike.stop()
         #bike.check_in_parking_area(self.routes_by_city["parkings"])
