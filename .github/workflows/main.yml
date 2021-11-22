@@ -25,7 +25,4 @@ jobs:
     - name: Tests and Code Coverage
       run: |
         pytest --cache-clear --cov=./ > pytest-coverage.txt,
-
-    - name: Code Coverage
-      run: |
         pytest --cov-report term-missing --cov=./
