@@ -1,2 +1,4 @@
 [run]
-omit = test_modules.py
+omit = 
+    test_modules.py
+    db/db.py

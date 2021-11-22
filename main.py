@@ -35,22 +35,20 @@ def init_bike(bike):
     """  
     return Bike.create_from_json(bike)
 
-def main():
+def init_users(users_data):
     """
-    Initializes and runs a new BikeController.
+    Initializes user objects for each city.
     """
-    # NUM_BIKES = int(sys.argv[1])
-    NUM_USERS = int(sys.argv[1])
-
-    bikes_data = db.db.getAllBikes()["bikes"]
-    users_data = db.db.getAllUsers()["users"]
-    
     for user in users_data:
         print(user["city"], "Umeå", user["city"] == "Umeå")
         if user["city"] == "Umeå":
             print("Found user")
             umea_users.append(User.create_from_json(user))
 
+def init_bikes(bikes_data):
+    """
+    Initializes bike objects for each city.
+    """
     for bike in bikes_data:
         if bike["city"] == "Umeå":
             bikes_in_city["Umeå"].setdefault("Umeå",[]).append(bike)
@@ -63,10 +61,11 @@ def main():
         bike = init_bike(item)
         bikes.append(bike)
 
-    if NUM_USERS > len(bikes):
-        print("Maximum amount of customers are: " + str(len(bikes)))
-        sys.exit(0)
-
+def init_processes(NUM_USERS):
+    """
+    Randomly pair up the given number of users with a randomly selected bike
+    and start separate processes for each.
+    """
     for i in range(NUM_USERS):
         print("users: " + str(len(umea_users)))
         if len(umea_users) > 0: 
@@ -78,6 +77,26 @@ def main():
 
         customer = Customer(calculated_routes, user._id, bike, user)
         processes.append(Process(target=customer.run))
+
+def main():
+    """
+    Initializes and runs a new BikeController.
+    """
+    NUM_USERS = int(sys.argv[1])
+
+    bikes_data = db.db.getAllBikes()["bikes"]
+    users_data = db.db.getAllUsers()["users"]
+
+    init_users(users_data)
+    init_bikes(bikes_data)
+
+    # Exit with status message if number of user exedes number of bikes.
+    if NUM_USERS > len(bikes):
+        print("Maximum amount of customers are: " + str(len(bikes)))
+        sys.exit(0)
+
+    init_processes(NUM_USERS)
+
 
     for process in processes:
         process.start()
