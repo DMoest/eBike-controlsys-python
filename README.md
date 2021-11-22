@@ -1,3 +1,4 @@
+[![pytest-coverage-commentator](https://github.com/DMoest/eBike-controlsys-python/actions/workflows/main.yml/badge.svg)](https://github.com/DMoest/eBike-controlsys-python/actions/workflows/main.yml)
 [![Build Status](https://app.travis-ci.com/DMoest/eBike-controlsys-python.svg?branch=master)](https://app.travis-ci.com/DMoest/eBike-controlsys-python)
 
 ## Beskrivning
