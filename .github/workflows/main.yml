@@ -1,6 +1,6 @@
 # This workflow will install dependencies, create coverage tests and run Pytest Coverage Commentator
 # For more information see: https://github.com/coroo/pytest-coverage-commentator
-name: pytest-coverage-commentator
+name: Code Coverage
 on:
   push:
     branches: 
@@ -22,7 +22,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest pytest-cov
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Run tests
+    - name: Tests and Code Coverage
       run: |
         pytest --cache-clear --cov=./ > pytest-coverage.txt,
 
