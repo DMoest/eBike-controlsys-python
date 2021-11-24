@@ -1,4 +1,4 @@
-![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/RobIsr/2c43afb51ab938eddf24e9f4c7f55d3f/raw/test.json)
+[![codecov](https://codecov.io/gh/Den-geografiska-oredan/eBike-controlsys-python/branch/master/graph/badge.svg?token=JPSD6XZ7GR)](https://codecov.io/gh/Den-geografiska-oredan/eBike-controlsys-python)
 
 [![Build Status](https://app.travis-ci.com/DMoest/eBike-controlsys-python.svg?branch=master)](https://app.travis-ci.com/DMoest/eBike-controlsys-python)
 
