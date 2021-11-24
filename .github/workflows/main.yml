@@ -25,7 +25,9 @@ jobs:
     - name: Tests and Code Coverage
       run: |
         pytest --cache-clear --cov=./ > pytest-coverage.txt
-        COV="$(pytest --cov-report term-missing --cov=./ | tail -n4 | head -n1 | cut -b 36,37,38)"
+        REPORT="$(pytest --cov-report term-missing --cov=./)"
+        echo "$(REPORT)"
+        COV=echo "$(REPORT" | tail -n4 | head -n1 | cut -b 36,37,38)"
         echo "COVERAGE=$(echo ${COV})" >> $GITHUB_ENV
     - name: Create Awesome Badge
       uses: schneegans/dynamic-badges-action@v1.1.0
