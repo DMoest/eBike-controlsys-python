@@ -22,14 +22,13 @@ stockholm_calculated_routes = helpers.calc_random_route_by_city("Stockholm")
 customers = []
 bikes = []
 users = []
-bikes = []
 bikes_in_city = defaultdict(dict)
 
 def signal_handler(sig, frame):
     """
     Terminate processes on exit signal.
     """
-    pass
+    sys.exit(0)
 
 def init_bike(bike):
     """
