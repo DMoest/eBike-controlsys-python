@@ -77,6 +77,52 @@
                         {"lat": 59.335785, "long": 18.055426}
                     ]
                 ]
+            },
+            "Göteborg": {
+                "routes": [
+                    {
+                        "route": [
+                            {"lat": 57.698614, "long": 11.973017, "stop": false, "duration": false},
+                            {"lat": 57.699460, "long": 11.971831, "stop": false, "duration": false},
+                            {"lat": 57.699849, "long": 11.972804, "stop": false, "duration": false},
+                            {"lat": 57.699007, "long": 11.974032, "stop": false, "duration": false},
+                            {"lat": 57.699377, "long": 11.974947, "stop": false, "duration": false},
+                            {"lat": 57.698390, "long": 11.976418, "stop": false, "duration": false},
+                            {"lat": 57.697596, "long": 11.974476, "stop": false, "duration": false},
+                            {"lat": 57.698616, "long":11.973020, "stop": false, "duration": false}
+                        ]
+                    },
+                    {
+                        "route": [
+                            {"lat": 57.698616, "long":11.973020, "stop": false, "duration": false},
+                            {"lat": 57.699720, "long": 11.975827, "stop": false, "duration": false},
+                            {"lat": 57.698763, "long": 11.977195, "stop": false, "duration": false},
+                            {"lat": 57.697599, "long": 11.974459, "stop": false, "duration": false},
+                            {"lat": 57.698617, "long": 11.973021, "stop": false, "duration": false}
+                        ]
+                    },
+                    {
+                        "route": [
+                            {"lat": 57.699004, "long": 11.974037, "stop": false, "duration": false},
+                            {"lat": 57.699854, "long": 11.972809, "stop": false, "duration": false},
+                            {"lat": 57.699460, "long": 11.971824, "stop": false, "duration": false},
+                            {"lat": 57.699599, "long": 11.971600, "stop": false, "duration": false},
+                            {"lat": 57.700499, "long": 11.970271, "stop": false, "duration": false},
+                            {"lat": 57.700898, "long": 11.971310, "stop": false, "duration": false},
+                            {"lat": 57.700365, "long": 11.972072, "stop": false, "duration": false}
+                        ]
+                    }
+                ],
+                "parkings": [
+                    [
+                        {"lat": 57.697435, "long": 11.973940},
+                        {"lat": 57.699183, "long": 11.973789}
+                    ],
+                    [
+                        {"lat": 57.698467, "long": 11.976917},
+                        {"lat": 57.699756, "long": 11.976217}
+                    ]
+                ]
             }
         }
     }

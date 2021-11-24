@@ -19,6 +19,7 @@ sys.stdin = open(1, 'w', encoding='utf-8', closefd=False)
 
 umea_calculated_routes = helpers.calc_random_route_by_city("Umeå")
 stockholm_calculated_routes = helpers.calc_random_route_by_city("Stockholm")
+goteborg_calculated_routes = helpers.calc_random_route_by_city("Göteborg")
 customers = []
 bikes = []
 users = []
@@ -45,6 +46,8 @@ def init_users(users_data):
             users.append(User.create_from_json(user))
         elif user["city"] == "Stockholm":
             users.append(User.create_from_json(user))
+        elif user["city"] == "Göteborg":
+            users.append(User.create_from_json(user))
 
 def get_random_user():
     random_user_idx = random.randint(0, len(users) - 1)
@@ -66,14 +69,18 @@ def init_bikes(bikes_data):
             bikes_in_city["Umeå"].setdefault("Umeå",[]).append(bike)
         elif bike["city"] == "Stockholm":
             bikes_in_city["Stockholm"].setdefault("Stockholm",[]).append(bike)
-        # elif bike["city"] == "Göteborg":
-            # bikes_in_city["göteborg"].append(bike)
+        elif bike["city"] == "Göteborg":
+            bikes_in_city["Göteborg"].setdefault("Göteborg",[]).append(bike)
 
     for item in bikes_in_city["Umeå"]["Umeå"]:
         bike = init_bike(item)
         bikes.append(bike)
 
     for item in bikes_in_city["Stockholm"]["Stockholm"]:
+        bike = init_bike(item)
+        bikes.append(bike)
+
+    for item in bikes_in_city["Göteborg"]["Göteborg"]:
         bike = init_bike(item)
         bikes.append(bike)
 
@@ -94,6 +101,8 @@ def init_processes(NUM_USERS):
             customer = Customer(umea_calculated_routes, user._id, bike, user)
         elif user.city == "Stockholm":
             customer = Customer(stockholm_calculated_routes, user._id, bike, user)
+        elif user.city == "Göteborg":
+            customer = Customer(goteborg_calculated_routes, user._id, bike, user)
 
         customers.append(customer)
         # process = Process(target=customer.run) 
