@@ -2,6 +2,7 @@
 
 import random
 import time
+import os
 
 class Customer:
     """
@@ -10,6 +11,7 @@ class Customer:
 
     routes_by_city = {}
     _id = None
+    _pid = None
     bike = None
     user = None
     route = None
@@ -18,6 +20,7 @@ class Customer:
     def __init__(self, calculated_routes, id, bike, user):
         self.routes_by_city = calculated_routes
         self._id = id
+        self._pid = os.getpid()
         self.bike = bike
         self.user = user
         speed = random.randint(5, 20)
@@ -26,11 +29,19 @@ class Customer:
         self.route = self.routes_by_city[self.user.city][self.route_idx][speed]
         if should_reverse == 1:
             self.route.reverse()
+
+    def get_pid(self):
+        return self._pid
+
+    def get_user(self):
+        return self.user
+
+    def get_bike(self):
+        return self.bike
             
     def run(self):
         """
-        Runs specified number of bikes with random route and
-        speed for every bike.
+        Runs specified bike along route.
         """
         self.bike.move_bike(self.route[0])
         self.bike.start(self.user)
@@ -40,23 +51,24 @@ class Customer:
     def start_bike(self, bike):
         """
         Starts all bikes and bulk updates their position according
-        to respective route every second.
+        to respective route every 10 seconds.
         """
 
         parkings = self.routes_by_city[self.user.city]["parkings"]
 
         for location in self.route:
+            if not bike._active:
+                break
             if bike._is_parking:
                 if bike.check_in_parking_area(parkings):
-                    bike.stop()
                     if bike._power_level <= 25:
                         print("Charging")
                         bike.charge_bike()
                         time.sleep(20)
                         bike._power_level = 100
+                        bike.stop()
                     break
             bike.move_bike(location)
             time.sleep(10)
         
         bike.stop()
-        #bike.check_in_parking_area(self.routes_by_city["parkings"])

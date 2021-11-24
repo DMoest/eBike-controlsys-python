@@ -67,7 +67,7 @@ class Bike():
         if self._power_level <= 25:
             self._is_parking = True
 
-        if self._power_level == 0:
+        if self._power_level <= 0:
             self.stop()
 
     def charge_bike(self):
