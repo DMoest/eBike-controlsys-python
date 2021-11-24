@@ -24,14 +24,14 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Tests and Code Coverage
       run: |
-        pytest --cache-clear --cov=./ > pytest-coverage.txt,
-        pytest --cov-report term-missing --cov=./
+        pytest --cache-clear --cov=./ > pytest-coverage.txt
+        echo "COVERAGE=$(echo ${pytest --cov-report term-missing --cov=./ | tail -n4 | head -n1 | cut -b 36,37,38})" >> $GITHUB_ENV
     - name: Create Awesome Badge
       uses: schneegans/dynamic-badges-action@v1.1.0
       with:
         auth: ${{ secrets.GIST_SECRET }}
         gistID: 2c43afb51ab938eddf24e9f4c7f55d3f
         filename: test.json
-        label: Hello
-        message: World
+        label: Test Coverage
+        message: ${{ env.COVERAGE }}
         color: orange
