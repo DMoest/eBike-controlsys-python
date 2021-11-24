@@ -1,4 +1,5 @@
-[![Code Coverage](https://github.com/DMoest/eBike-controlsys-python/actions/workflows/main.yml/badge.svg)](https://github.com/DMoest/eBike-controlsys-python/actions/workflows/main.yml)
+![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/RobIsr/2c43afb51ab938eddf24e9f4c7f55d3f/raw/test.json)
+
 [![Build Status](https://app.travis-ci.com/DMoest/eBike-controlsys-python.svg?branch=master)](https://app.travis-ci.com/DMoest/eBike-controlsys-python)
 
 ## Beskrivning

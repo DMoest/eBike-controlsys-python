@@ -26,3 +26,12 @@ jobs:
       run: |
         pytest --cache-clear --cov=./ > pytest-coverage.txt,
         pytest --cov-report term-missing --cov=./
+    - name: Create Awesome Badge
+      uses: schneegans/dynamic-badges-action@v1.1.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: 2c43afb51ab938eddf24e9f4c7f55d3f
+        filename: test.json
+        label: Hello
+        message: World
+        color: orange
