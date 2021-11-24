@@ -1,3 +1,5 @@
+[![Build](https://github.com/Den-geografiska-oredan/eBike-controlsys-python/actions/workflows/main.yml/badge.svg)](https://github.com/Den-geografiska-oredan/eBike-controlsys-python/actions/workflows/main.yml)
+
 [![codecov](https://codecov.io/gh/Den-geografiska-oredan/eBike-controlsys-python/branch/master/graph/badge.svg?token=JPSD6XZ7GR)](https://codecov.io/gh/Den-geografiska-oredan/eBike-controlsys-python)
 
 ## Beskrivning
