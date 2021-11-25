@@ -1,29 +1,21 @@
 #!/usr/bin/env python3
 
 import sys
-import os
-import random
 import signal
-from collections import defaultdict
-from multiprocessing import Process, Pool, Manager
-from app.bike import Bike
-from app.user import User
+from multiprocessing import Pool, cpu_count
+import time
+from dependency_injector.wiring import Provide, inject
 from app.customer import Customer
-import utils.helpers as helpers
-import db.db
-
+from services.bike_service import BikeService
+from services.container import Container
+from services.routes_service import RouteService
+from services.user_service import UserService
 
 # Fix to handle utf-8 input and output.
 sys.stdout = open(1, 'w', encoding='utf-8', closefd=False)
 sys.stdin = open(1, 'w', encoding='utf-8', closefd=False)
 
-umea_calculated_routes = helpers.calc_random_route_by_city("Umeå")
-stockholm_calculated_routes = helpers.calc_random_route_by_city("Stockholm")
-goteborg_calculated_routes = helpers.calc_random_route_by_city("Göteborg")
 customers = []
-bikes = []
-users = []
-bikes_in_city = defaultdict(dict)
 
 def signal_handler(sig, frame):
     """
@@ -31,107 +23,59 @@ def signal_handler(sig, frame):
     """
     sys.exit(0)
 
-def init_bike(bike):
-    """
-    Initializes new Bike object.
-    """  
-    return Bike.create_from_json(bike)
-
-def init_users(users_data):
-    """
-    Initializes user objects for each city.
-    """
-    for user in users_data:
-        if user["city"] == "Umeå":
-            users.append(User.create_from_json(user))
-        elif user["city"] == "Stockholm":
-            users.append(User.create_from_json(user))
-        elif user["city"] == "Göteborg":
-            users.append(User.create_from_json(user))
-
-def get_random_user():
-    random_user_idx = random.randint(0, len(users) - 1)
-    user = users.pop(random_user_idx)
-    return user
-
-def get_random_bike():
-    random_bike_idx = random.randint(0, len(bikes) - 1)
-    bike = bikes.pop(random_bike_idx)
-    return bike
-
-
-def init_bikes(bikes_data):
-    """
-    Initializes bike objects for each city.
-    """
-    for bike in bikes_data:
-        if bike["city"] == "Umeå":
-            bikes_in_city["Umeå"].setdefault("Umeå",[]).append(bike)
-        elif bike["city"] == "Stockholm":
-            bikes_in_city["Stockholm"].setdefault("Stockholm",[]).append(bike)
-        elif bike["city"] == "Göteborg":
-            bikes_in_city["Göteborg"].setdefault("Göteborg",[]).append(bike)
-
-    for item in bikes_in_city["Umeå"]["Umeå"]:
-        bike = init_bike(item)
-        bikes.append(bike)
-
-    for item in bikes_in_city["Stockholm"]["Stockholm"]:
-        bike = init_bike(item)
-        bikes.append(bike)
-
-    for item in bikes_in_city["Göteborg"]["Göteborg"]:
-        bike = init_bike(item)
-        bikes.append(bike)
-
-def init_processes(NUM_USERS):
+def init_processes(NUM_USERS, user_service, bike_service, route_service):
     """
     Randomly pair up the given number of users with a randomly selected bike
     and start separate processes for each.
     """
     for i in range(NUM_USERS):
-        print("users: " + str(len(users)))
-        if len(users) > 0:
-            user = get_random_user()
+        print("users: " + str(user_service.get_users_count()))
+        if user_service.get_users_count() > 0:
+            user = user_service.get_random_user()
             
-        bike = get_random_bike()
+        bike = bike_service.get_random_bike()
 
         customer = None
         if user.city == "Umeå":
-            customer = Customer(umea_calculated_routes, user._id, bike, user)
+            customer = Customer(route_service.get_routes_for_umea(), user._id, bike, user)
         elif user.city == "Stockholm":
-            customer = Customer(stockholm_calculated_routes, user._id, bike, user)
+            customer = Customer(route_service.get_routes_for_stockholm(), user._id, bike, user)
         elif user.city == "Göteborg":
-            customer = Customer(goteborg_calculated_routes, user._id, bike, user)
+            customer = Customer(route_service.get_routes_for_goteborg(), user._id, bike, user)
 
         customers.append(customer)
-        # process = Process(target=customer.run) 
-        # processes.append(process)
 
 def start_customer(customer):
-    customer.run()
+    try:
+        customer.run()
+    except KeyboardInterrupt:
+        print("Killing process...")
 
-def main():
+@inject
+def main(
+    bike_service: BikeService = Provide[Container.bike_service],
+    user_service: UserService = Provide[Container.user_service],
+    route_service: RouteService = Provide[Container.routes_service]):
+
     NUM_USERS = int(sys.argv[1])
 
-    bikes_data = db.db.getAllBikes()["bikes"]
-    users_data = db.db.getAllUsers()["users"]
-
-    init_users(users_data)
-    init_bikes(bikes_data)
-
     # Exit with status message if number of user exedes number of bikes.
-    if NUM_USERS > len(bikes):
-        print("Maximum amount of customers are: " + str(len(bikes)))
+    if NUM_USERS > bike_service.get_bikes_count():
+        print("Maximum amount of customers are: " + str(bike_service.get_bikes_count()))
         sys.exit(0)
 
-    init_processes(NUM_USERS)
+    init_processes(NUM_USERS, user_service, bike_service, route_service)
 
     # Start processes.
     p = Pool(NUM_USERS)
-    p.map(start_customer, customers)
-
+    r = p.map_async(start_customer, customers)
+    r.wait()
 
 if __name__ == "__main__":
-    main()
+    container = Container()
+    container.wire(modules=[__name__])
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("Exit...")
     signal.signal(signal.SIGINT, signal_handler)
