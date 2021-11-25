@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
+import multiprocessing
 import sys
 import signal
-from multiprocessing import Pool, cpu_count
+from multiprocessing import Process, cpu_count
 import time
 from dependency_injector.wiring import Provide, inject
 from app.customer import Customer
+from app.customer_thread import CustomerThread
 from services.bike_service import BikeService
 from services.container import Container
 from services.routes_service import RouteService
@@ -16,12 +18,17 @@ sys.stdout = open(1, 'w', encoding='utf-8', closefd=False)
 sys.stdin = open(1, 'w', encoding='utf-8', closefd=False)
 
 customers = []
+customer_threads = []
 
 def signal_handler(sig, frame):
     """
     Terminate processes on exit signal.
     """
     sys.exit(0)
+
+def split_to_chunks(a, n):
+    k, m = divmod(len(a), n)
+    return (a[i*k+min(i, m):(i+1)*k+min(i+1, m)] for i in range(n))
 
 def init_processes(NUM_USERS, user_service, bike_service, route_service):
     """
@@ -51,6 +58,12 @@ def start_customer(customer):
     except KeyboardInterrupt:
         print("Killing process...")
 
+def start_threds(customers):
+    for customer in customers:
+        thread = CustomerThread(customer)
+        thread.start()
+        customer_threads.append(thread)
+
 @inject
 def main(
     bike_service: BikeService = Provide[Container.bike_service],
@@ -66,10 +79,11 @@ def main(
 
     init_processes(NUM_USERS, user_service, bike_service, route_service)
 
-    # Start processes.
-    p = Pool(NUM_USERS)
-    r = p.map_async(start_customer, customers)
-    r.wait()
+    customer_chunks = split_to_chunks(customers, cpu_count())
+
+    for chunk in customer_chunks:
+        p = Process(target=start_threds, args=[chunk])
+        p.start()
 
 if __name__ == "__main__":
     container = Container()
