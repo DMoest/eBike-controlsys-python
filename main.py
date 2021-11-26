@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 
-import multiprocessing
 import sys
 import signal
 from multiprocessing import Process, cpu_count
-import time
 from dependency_injector.wiring import Provide, inject
 from app.customer import Customer
 from app.customer_thread import CustomerThread
@@ -27,6 +25,9 @@ def signal_handler(sig, frame):
     sys.exit(0)
 
 def split_to_chunks(a, n):
+    """
+    Splits array into n number of chunks.
+    """
     k, m = divmod(len(a), n)
     return (a[i*k+min(i, m):(i+1)*k+min(i+1, m)] for i in range(n))
 
@@ -53,12 +54,18 @@ def init_processes(NUM_USERS, user_service, bike_service, route_service):
         customers.append(customer)
 
 def start_customer(customer):
+    """
+    Starts a customer object.
+    """
     try:
         customer.run()
     except KeyboardInterrupt:
         print("Killing process...")
 
 def start_threds(customers):
+    """
+    Start a thread for the specified customer.
+    """
     for customer in customers:
         thread = CustomerThread(customer)
         thread.start()
@@ -70,6 +77,11 @@ def main(
     user_service: UserService = Provide[Container.user_service],
     route_service: RouteService = Provide[Container.routes_service]):
 
+    """
+    Main function to run the program with neccesary dependencies
+    injected.
+    """
+
     NUM_USERS = int(sys.argv[1])
 
     # Exit with status message if number of user exedes number of bikes.
@@ -79,17 +91,23 @@ def main(
 
     init_processes(NUM_USERS, user_service, bike_service, route_service)
 
+    # Split the customers array in a number of chunks according to the
+    # cpu count.
     customer_chunks = split_to_chunks(customers, cpu_count())
 
+    # Start one process for each chunk of customers and run each customer
+    # in a separate thread on that process.
     for chunk in customer_chunks:
         p = Process(target=start_threds, args=[chunk])
         p.start()
 
 if __name__ == "__main__":
+    # Wire dependencies.
     container = Container()
     container.wire(modules=[__name__])
     try:
         main()
     except KeyboardInterrupt:
         print("Exit...")
+        
     signal.signal(signal.SIGINT, signal_handler)

@@ -10,8 +10,8 @@ class BikeService():
     bikes = []
     bikes_in_city = defaultdict(dict)
 
-    def __init__(self):
-        bikes_data = db.db.getAllBikes()["bikes"]
+    def __init__(self, api: db.db.Api):
+        bikes_data = api.getAllBikes()["bikes"]
         NUM_USERS = int(sys.argv[1])
 
         self.init_bikes(bikes_data)

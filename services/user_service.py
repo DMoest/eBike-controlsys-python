@@ -6,8 +6,8 @@ from app.user import User
 class UserService():
     users = []
 
-    def __init__(self):
-        users_data = db.db.getAllUsers()["users"]
+    def __init__(self, api: db.db.Api):
+        users_data = api.getAllUsers()["users"]
         self.init_users(users_data)
 
     def init_users(self, users_data):
