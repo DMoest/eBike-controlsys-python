@@ -77,8 +77,6 @@ class Bike():
         """
         Send request to api to update the bikes info.
         """
-        print(str(self._id) + " Powerlevel: " + str(self._power_level) + " Looking for parking: " + str(self._is_parking) + " Parked: " + str(self._parking_approved) + " Charging: " + str(self._is_charging))
-
         requests.put('http://ebike_backend:8000/api/bike', data ={
             '_id': self._id,
             'city': self._city,
@@ -87,7 +85,7 @@ class Bike():
             'longitude': self._position["lon2"],
             'latitude': self._position["lat2"]
         })
-        t = threading.Timer(30, self.update_db)
+        t = threading.Timer(60, self.update_db)
         t.start()
 
     def start_trip(self):

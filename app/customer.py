@@ -43,6 +43,8 @@ class Customer:
         """
         Runs specified bike along route.
         """
+        delay = random.randint(0, 300)
+        time.sleep(delay)
         self.bike.move_bike(self.route[0])
         self.bike.start(self.user)
 
@@ -62,7 +64,6 @@ class Customer:
             if bike._is_parking:
                 if bike.check_in_parking_area(parkings):
                     if bike._power_level <= 25:
-                        print("Charging")
                         bike.charge_bike()
                         time.sleep(20)
                         bike._power_level = 100

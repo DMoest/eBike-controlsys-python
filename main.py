@@ -37,7 +37,6 @@ def init_processes(NUM_USERS, user_service, bike_service, route_service):
     and start separate processes for each.
     """
     for i in range(NUM_USERS):
-        print("users: " + str(user_service.get_users_count()))
         if user_service.get_users_count() > 0:
             user = user_service.get_random_user()
             
@@ -94,6 +93,8 @@ def main(
     # Split the customers array in a number of chunks according to the
     # cpu count.
     customer_chunks = split_to_chunks(customers, cpu_count())
+
+    print("Simulation running...")
 
     # Start one process for each chunk of customers and run each customer
     # in a separate thread on that process.
