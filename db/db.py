@@ -16,3 +16,7 @@ class Api():
     def getAllUsers(self):
         r = requests.get('http://ebike_backend:8000/api/user')
         return r.json()
+
+    def getAllParkings(self):
+        r = requests.get('http://ebike_backend:8000/api/parking')
+        return r.json()

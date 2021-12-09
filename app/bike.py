@@ -19,8 +19,9 @@ class Bike():
     _is_parking = False
     _is_charging = False
     _user = None
+    _parkings = None
 
-    def __init__(self, id, speed, city, status, active, position, power_level):
+    def __init__(self, id, speed, city, status, active, position, power_level, parkings):
         self._id = id
         self._speed = speed
         self._city = city
@@ -28,6 +29,7 @@ class Bike():
         self._active = active
         self._position = position
         self._power_level = power_level
+        self._parkings = parkings
 
     def start(self, user):
         """
@@ -43,20 +45,23 @@ class Bike():
         Stop the bike and update database.
         """
         self._active = False
-        self.end_trip()
         self.update_db()
+        self.end_trip()
 
-    def check_in_parking_area(self, parkings):
+    def check_in_parking_area(self):
         """
         Determine if the bike is within any of the approved parking
         areas supplied.
         """
-        self._parking_approved = False
-        for parking in (parkings):
-            if parking[1]["lat"] < self._position["lat2"] < parking[0]["lat"] and\
-                parking[1]["long"] < self._position["lon2"] < parking[0]["long"]:
-                self._parking_approved = True
-                break
+        withinParking = False
+
+        # 0 represents latitude and 1 longitude
+        if self._parkings[0].sw[0] < self._position["lat2"] < self._parkings[0].ne[0] and\
+            self._parkings[0].sw[1] < self._position["lon2"] < self._parkings[0].ne[1]:
+            self._parking_approved = True
+            withinParking = True
+        return withinParking
+        
 
     def move_bike(self, location):
         """
@@ -64,11 +69,15 @@ class Bike():
         """
         self._position = location
         self._power_level -= 0.5
-        if self._power_level <= 25:
-            self._is_parking = True
-
         if self._power_level <= 0:
             self.stop()
+
+        # Stop bike if powerlevel is low and within parking area.
+        if self._power_level < 25:
+            parking_idx = self.check_in_parking_area()
+            if parking_idx:
+                print("Stopping in parking area: " + str(parking_idx))
+                self.stop()
 
     def charge_bike(self):
         self._is_charging = True
@@ -83,9 +92,11 @@ class Bike():
             'status': self._status,
             'active': self._active,
             'longitude': self._position["lon2"],
-            'latitude': self._position["lat2"]
+            'latitude': self._position["lat2"],
+            'speed': self._speed,
+            'battery': self._power_level
         })
-        t = threading.Timer(60, self.update_db)
+        t = threading.Timer(35, self.update_db)
         t.start()
 
     def start_trip(self):
@@ -111,7 +122,7 @@ class Bike():
         
 
     @classmethod
-    def create_from_json(cls, json_data):
+    def create_from_json(cls, json_data, parkings):
         """
         Factory method to create a bike object from JSON.
         """
@@ -125,4 +136,5 @@ class Bike():
             json_data["status"],
             json_data["active"],
             {"lat2": json_data["latitude"], "lon2": json_data["longitude"]},
-            power)
+            power,
+            parkings)

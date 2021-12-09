@@ -8,6 +8,7 @@ from app.customer import Customer
 from app.customer_thread import CustomerThread
 from services.bike_service import BikeService
 from services.container import Container
+from services.parking_service import ParkingService
 from services.routes_service import RouteService
 from services.user_service import UserService
 
@@ -41,8 +42,8 @@ def init_processes(NUM_USERS, user_service, bike_service, route_service):
             user = user_service.get_random_user()
             
         bike = bike_service.get_random_bike()
-
         customer = None
+
         if user.city == "Umeå":
             customer = Customer(route_service.get_routes_for_umea(), user._id, bike, user)
         elif user.city == "Stockholm":

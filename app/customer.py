@@ -52,24 +52,13 @@ class Customer:
 
     def start_bike(self, bike):
         """
-        Starts all bikes and bulk updates their position according
-        to respective route every 10 seconds.
+        Starts the bike and updates its position according
+        to route every 10 seconds.
         """
 
-        parkings = self.routes_by_city[self.user.city]["parkings"]
-
         for location in self.route:
-            if not bike._active:
-                break
-            if bike._is_parking:
-                if bike.check_in_parking_area(parkings):
-                    if bike._power_level <= 25:
-                        bike.charge_bike()
-                        time.sleep(20)
-                        bike._power_level = 100
-                        bike.stop()
-                    break
-            bike.move_bike(location)
-            time.sleep(10)
+            if bike._active:
+                bike.move_bike(location)
+                time.sleep(10)
         
         bike.stop()
