@@ -16,7 +16,7 @@ class BikeService():
         bikes_data = api.getAllBikes()["bikes"]
         NUM_USERS = int(sys.argv[1])
         self.parkings = parkings.parkings_umeå
-
+        print(bikes_data)
         self.init_bikes(bikes_data)
 
     def init_bike(self, bike):
@@ -37,18 +37,21 @@ class BikeService():
                 self.bikes_in_city["Stockholm"].setdefault("Stockholm",[]).append(bike)
             elif bike["city"] == "Göteborg":
                 self.bikes_in_city["Göteborg"].setdefault("Göteborg",[]).append(bike)
+        
+        if "Umeå" in self.bikes_in_city:
+            for item in self.bikes_in_city["Umeå"]["Umeå"]:
+                bike = self.init_bike(item)
+                self.bikes.append(bike)
 
-        for item in self.bikes_in_city["Umeå"]["Umeå"]:
-            bike = self.init_bike(item)
-            self.bikes.append(bike)
-
-        for item in self.bikes_in_city["Stockholm"]["Stockholm"]:
-            bike = self.init_bike(item)
-            self.bikes.append(bike)
-
-        for item in self.bikes_in_city["Göteborg"]["Göteborg"]:
-            bike = self.init_bike(item)
-            self.bikes.append(bike)
+        if "Stockholm" in self.bikes_in_city:
+            for item in self.bikes_in_city["Stockholm"]["Stockholm"]:
+                bike = self.init_bike(item)
+                self.bikes.append(bike)
+        
+        if "Göteborg" in self.bikes_in_city:
+            for item in self.bikes_in_city["Göteborg"]["Göteborg"]:
+                bike = self.init_bike(item)
+                self.bikes.append(bike)
 
     def get_random_bike(self):
         random_bike_idx = random.randint(0, len(self.bikes) - 1)

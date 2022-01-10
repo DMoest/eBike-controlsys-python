@@ -99,26 +99,26 @@ class Bike():
         t = threading.Timer(35, self.update_db)
         t.start()
 
-    def start_trip(self):
-        requests.post('http://ebike_backend:8000/api/travel', data ={
-            'city': self._city,
-            'user_id': self._user._id,
-            'bike_id': self._id,
-            'status': self._status,
-            'start_longitude': self._position["lon2"],
-            'start_latitude': self._position["lat2"],
-            'price': 0
-        })
+    # def start_trip(self):
+    #     requests.post('http://ebike_backend:8000/api/travel', data ={
+    #         'city': self._city,
+    #         'user_id': self._user._id,
+    #         'bike_id': self._id,
+    #         'status': self._status,
+    #         'start_longitude': self._position["lon2"],
+    #         'start_latitude': self._position["lat2"],
+    #         'price': 0
+    #     })
 
-    def end_trip(self):
-        requests.put('http://ebike_backend:8000/api/travel', data ={
-            'city': self._city,
-            'user_id': self._user._id,
-            'bike_id': self._id,
-            'status': self._status,
-            'stop_longitude': self._position["lon2"],
-            'stop_latitude': self._position["lat2"],
-        })
+    # def end_trip(self):
+    #     requests.put('http://ebike_backend:8000/api/travel', data ={
+    #         'city': self._city,
+    #         'user_id': self._user._id,
+    #         'bike_id': self._id,
+    #         'status': self._status,
+    #         'stop_longitude': self._position["lon2"],
+    #         'stop_latitude': self._position["lat2"],
+    #     })
         
 
     @classmethod
@@ -128,6 +128,8 @@ class Bike():
         """
         speed = random.randint(5, 20)
         power = random.randint(25, 100)
+
+        print(len(json_data))
 
         return cls(
             json_data["_id"],

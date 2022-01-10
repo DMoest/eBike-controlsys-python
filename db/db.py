@@ -10,13 +10,13 @@ class Api():
         pass
 
     def getAllBikes(self):
-        r = requests.get('http://ebike_backend:8000/api/bike')
+        r = requests.get('http://ebike_backend:8000/api/v1/bike')
         return r.json()
 
     def getAllUsers(self):
-        r = requests.get('http://ebike_backend:8000/api/user')
+        r = requests.get('http://ebike_backend:8000/api/v1/user')
         return r.json()
 
     def getAllParkings(self):
-        r = requests.get('http://ebike_backend:8000/api/parking')
+        r = requests.get('http://ebike_backend:8000/api/v1/parking')
         return r.json()
