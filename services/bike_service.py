@@ -16,7 +16,6 @@ class BikeService():
         bikes_data = api.getAllBikes()["bikes"]
         NUM_USERS = int(sys.argv[1])
         self.parkings = parkings.parkings_umeå
-        print(bikes_data)
         self.init_bikes(bikes_data)
 
     def init_bike(self, bike):
