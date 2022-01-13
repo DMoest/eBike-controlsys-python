@@ -86,7 +86,7 @@ class Bike():
         """
         Send request to api to update the bikes info.
         """
-        requests.put('http://ebike_backend:8000/api/bike', data ={
+        requests.put('http://ebike_backend:8000/api/v1/simulation/bike', data ={
             '_id': self._id,
             'city': self._city,
             'status': self._status,
@@ -99,26 +99,26 @@ class Bike():
         t = threading.Timer(35, self.update_db)
         t.start()
 
-    # def start_trip(self):
-    #     requests.post('http://ebike_backend:8000/api/travel', data ={
-    #         'city': self._city,
-    #         'user_id': self._user._id,
-    #         'bike_id': self._id,
-    #         'status': self._status,
-    #         'start_longitude': self._position["lon2"],
-    #         'start_latitude': self._position["lat2"],
-    #         'price': 0
-    #     })
+    def start_trip(self):
+        requests.post('http://ebike_backend:8000/api/v1/simulation/travel', data ={
+            'city': self._city,
+            'user_id': self._user._id,
+            'bike_id': self._id,
+            'status': self._status,
+            'start_longitude': self._position["lon2"],
+            'start_latitude': self._position["lat2"],
+            'price': 0
+        })
 
-    # def end_trip(self):
-    #     requests.put('http://ebike_backend:8000/api/travel', data ={
-    #         'city': self._city,
-    #         'user_id': self._user._id,
-    #         'bike_id': self._id,
-    #         'status': self._status,
-    #         'stop_longitude': self._position["lon2"],
-    #         'stop_latitude': self._position["lat2"],
-    #     })
+    def end_trip(self):
+        requests.put('http://ebike_backend:8000/api/v1/simulation/travel', data ={
+            'city': self._city,
+            'user_id': self._user._id,
+            'bike_id': self._id,
+            'status': self._status,
+            'stop_longitude': self._position["lon2"],
+            'stop_latitude': self._position["lat2"],
+        })
         
 
     @classmethod
