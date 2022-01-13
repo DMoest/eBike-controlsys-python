@@ -9,7 +9,6 @@ class ParkingService():
 
     def __init__(self, api: db.db.Api):
         parkings_data = api.getAllParkings()["parking_zones"]
-        print(parkings_data)
         self.init_parkings(parkings_data)
 
     def init_parkings(self, parkings_data):
