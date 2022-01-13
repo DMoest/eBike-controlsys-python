@@ -18,11 +18,26 @@ from app.customer import Customer
 
 
 class TestBike(unittest.TestCase):
+
     def test_bike_create(self):
         """
         Object can be created successfully.
         """
-        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.825107, "longitude": 20.261642}
+        parkings = {
+            "parkings": [
+                        [
+                            {"lat": 63.828615, "long": 20.253928},
+                            {"lat": 63.826621, "long": 20.250680},
+                            {"lat": 63.827423, "long": 20.251668}
+                        ],
+                        [
+                            {"lat": 63.825414, "long": 20.262796},
+                            {"lat": 63.824045, "long": 20.260819},
+                            {"lat": 63.824454, "long": 20.261379}
+                        ]
+                    ]
+        }
+        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.825107, "longitude": 20.261642, "parkings": parkings}
         bike = Bike.create_from_json(bike_json)
         self.assertEqual(bike._id, 1)
         self.assertEqual(bike._city, "Umeå")
@@ -41,7 +56,7 @@ class TestBike(unittest.TestCase):
                         {"lat": 63.826940, "long": 20.250028}
                     ]
                 ]
-        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.827211, "longitude": 20.252348}
+        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.827211, "longitude": 20.252348, "parkings": parkings}
         bike = Bike.create_from_json(bike_json)
         
         bike.check_in_parking_area(parkings)
@@ -59,7 +74,7 @@ class TestBike(unittest.TestCase):
                         {"lat": 63.826940, "long": 20.250028}
                     ]
                 ]
-        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.826263, "longitude": 20.254804}
+        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.826263, "longitude": 20.254804, "parkings": parkings}
         bike = Bike.create_from_json(bike_json)
         
         bike.check_in_parking_area(parkings)
@@ -70,7 +85,22 @@ class TestBike(unittest.TestCase):
         """
         Test that bikes charging status is updated.
         """
-        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.827211, "longitude": 20.252348}
+        parkings = {
+            "parkings": [
+                        [
+                            {"lat": 63.828615, "long": 20.253928},
+                            {"lat": 63.826621, "long": 20.250680},
+                            {"lat": 63.827423, "long": 20.251668}
+                        ],
+                        [
+                            {"lat": 63.825414, "long": 20.262796},
+                            {"lat": 63.824045, "long": 20.260819},
+                            {"lat": 63.824454, "long": 20.261379}
+                        ]
+                    ]
+        }
+        
+        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.827211, "longitude": 20.252348, "parkings": parkings}
         bike = Bike.create_from_json(bike_json)
 
         bike.charge_bike()
@@ -82,7 +112,22 @@ class TestBike(unittest.TestCase):
         Test that start method set correct active status and that
         updatedb() is called.
         """
-        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.827211, "longitude": 20.252348}
+        parkings = {
+            "parkings": [
+                        [
+                            {"lat": 63.828615, "long": 20.253928},
+                            {"lat": 63.826621, "long": 20.250680},
+                            {"lat": 63.827423, "long": 20.251668}
+                        ],
+                        [
+                            {"lat": 63.825414, "long": 20.262796},
+                            {"lat": 63.824045, "long": 20.260819},
+                            {"lat": 63.824454, "long": 20.261379}
+                        ]
+                    ]
+        }
+
+        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.827211, "longitude": 20.252348, "parkings": parkings}
         bike = Bike.create_from_json(bike_json)
 
         bike.update_db = MagicMock()
@@ -98,7 +143,21 @@ class TestBike(unittest.TestCase):
         Test that start method set correct active status and that
         updatedb() is called.
         """
-        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.827211, "longitude": 20.252348}
+        parkings = {
+            "parkings": [
+                        [
+                            {"lat": 63.828615, "long": 20.253928},
+                            {"lat": 63.826621, "long": 20.250680},
+                            {"lat": 63.827423, "long": 20.251668}
+                        ],
+                        [
+                            {"lat": 63.825414, "long": 20.262796},
+                            {"lat": 63.824045, "long": 20.260819},
+                            {"lat": 63.824454, "long": 20.261379}
+                        ]
+                    ]
+        }
+        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.827211, "longitude": 20.252348, "parkings": parkings}
         bike = Bike.create_from_json(bike_json)
 
         bike.update_db = MagicMock()
@@ -121,7 +180,21 @@ class TestCustomer(unittest.TestCase):
     in Customer object gets called when calling run()
     """
     def test_run(self):
-        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.827211, "longitude": 20.252348}
+        parkings = {
+            "parkings": [
+                        [
+                            {"lat": 63.828615, "long": 20.253928},
+                            {"lat": 63.826621, "long": 20.250680},
+                            {"lat": 63.827423, "long": 20.251668}
+                        ],
+                        [
+                            {"lat": 63.825414, "long": 20.262796},
+                            {"lat": 63.824045, "long": 20.260819},
+                            {"lat": 63.824454, "long": 20.261379}
+                        ]
+                    ]
+        }
+        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.827211, "longitude": 20.252348, "parkings": parkings}
         bike = Bike.create_from_json(bike_json)
         user_json = {
             "_id": "61954fd32cec02b4ff0a2bfd",
@@ -152,7 +225,21 @@ class TestCustomer(unittest.TestCase):
 
     @patch('time.sleep', return_value=None)
     def test_start_bike(self, patched_time_sleep):
-        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": True, "latitude": 63.827211, "longitude": 20.252348}
+        parkings = {
+            "parkings": [
+                        [
+                            {"lat": 63.828615, "long": 20.253928},
+                            {"lat": 63.826621, "long": 20.250680},
+                            {"lat": 63.827423, "long": 20.251668}
+                        ],
+                        [
+                            {"lat": 63.825414, "long": 20.262796},
+                            {"lat": 63.824045, "long": 20.260819},
+                            {"lat": 63.824454, "long": 20.261379}
+                        ]
+                    ]
+        }
+        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": True, "latitude": 63.827211, "longitude": 20.252348, "parkings": parkings}
         bike = Bike.create_from_json(bike_json)
         user_json = {
             "_id": "61954fd32cec02b4ff0a2bfd",

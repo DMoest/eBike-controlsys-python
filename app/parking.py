@@ -25,7 +25,7 @@ class Parking():
         return cls(
             json_data["_id"],
             json_data["city"],
-            (json_data["sw_latitude"], json_data["sw_longitude"]),
-            (json_data["se_latitude"], json_data["se_longitude"]),
-            (json_data["nw_latitude"], json_data["nw_longitude"]),
-            (json_data["ne_latitude"], json_data["ne_longitude"]))
+            (float(json_data["sw_latitude"]), float(json_data["sw_longitude"])),
+            (float(json_data["se_latitude"]), float(json_data["se_longitude"])),
+            (float(json_data["nw_latitude"]), float(json_data["nw_longitude"])),
+            (float(json_data["ne_latitude"]), float(json_data["ne_longitude"])))

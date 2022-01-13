@@ -54,9 +54,15 @@ class BikeService():
                 self.bikes.append(bike)
 
     def get_random_bike(self):
+        """
+        Returns a randomly selected bike, and pops this from available bikes.
+        """
         random_bike_idx = random.randint(0, len(self.bikes) - 1)
         bike = self.bikes.pop(random_bike_idx)
         return bike
 
     def get_bikes_count(self):
+        """
+        Returns the number of bikes.
+        """
         return len(self.bikes)
