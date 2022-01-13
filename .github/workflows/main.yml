@@ -8,8 +8,6 @@ on:
   pull_request:
     branches: 
       - '*'
-env:
-  CI: false
 jobs:
   build:
     runs-on: ubuntu-latest
