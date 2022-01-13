@@ -119,78 +119,79 @@ class TestBike(unittest.TestCase):
 
 
 
-# class TestCustomer(unittest.TestCase):
-#     """
-#     Test that bike object is started and that the start_bike method
-#     in Customer object gets called when calling run()
-#     """
-#     def test_run(self):
-#         parkings = [
-#             Parking.create_from_json({'_id': 1, 'city': 'Umeå', 'sw_longitude': '20.260667', 'sw_latitude': '63.824319', 'se_longitude': '20.260667', 'se_latitude': '63.824319', 'ne_longitude': '20.263607', 'ne_latitude': '63.82492', 'nw_longitude': '20.263607', 'nw_latitude': '63.82492', 'created_at': '2022-01-13T12:21:13.000000Z', 'updated_at': '2022-01-13T12:21:13.000000Z'})
-#         ]
+class TestCustomer(unittest.TestCase):
+    """
+    Test that bike object is started and that the start_bike method
+    in Customer object gets called when calling run()
+    """
+    @patch('time.sleep', return_value=None)
+    def test_run(self, patched_time_sleep):
+        parkings = [
+            Parking.create_from_json({'_id': 1, 'city': 'Umeå', 'sw_longitude': '20.260667', 'sw_latitude': '63.824319', 'se_longitude': '20.260667', 'se_latitude': '63.824319', 'ne_longitude': '20.263607', 'ne_latitude': '63.82492', 'nw_longitude': '20.263607', 'nw_latitude': '63.82492', 'created_at': '2022-01-13T12:21:13.000000Z', 'updated_at': '2022-01-13T12:21:13.000000Z'})
+        ]
 
-#         bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.827211, "longitude": 20.252348}
-#         bike = Bike.create_from_json(bike_json, parkings)
-#         user_json = {
-#             "_id": "61954fd32cec02b4ff0a2bfd",
-#             "firstname": "Siv",
-#             "lastname": "Björk",
-#             "adress": "Lillvägen 2I",
-#             "postcode": "548 72",
-#             "city": "Umeå",
-#             "phone": "0442-599 96",
-#             "email": "marie.lind@example.org",
-#             "email_verified_at": "2021-11-17T18:54:10.964000Z",
-#             "payment_method": "monthly",
-#             "payment_status": "paid",
-#             "updated_at": "2021-11-17T18:54:11.477000Z",
-#             "created_at": "2021-11-17T18:54:11.477000Z"
-#             }
-#         user = User.create_from_json(user_json)
-#         routes = helpers.calc_random_route_by_city("Umeå")
-#         customer = Customer(routes, 1, bike, user)
+        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.827211, "longitude": 20.252348}
+        bike = Bike.create_from_json(bike_json, parkings)
+        user_json = {
+            "_id": "61954fd32cec02b4ff0a2bfd",
+            "firstname": "Siv",
+            "lastname": "Björk",
+            "adress": "Lillvägen 2I",
+            "postcode": "548 72",
+            "city": "Umeå",
+            "phone": "0442-599 96",
+            "email": "marie.lind@example.org",
+            "email_verified_at": "2021-11-17T18:54:10.964000Z",
+            "payment_method": "monthly",
+            "payment_status": "paid",
+            "updated_at": "2021-11-17T18:54:11.477000Z",
+            "created_at": "2021-11-17T18:54:11.477000Z"
+            }
+        user = User.create_from_json(user_json)
+        routes = helpers.calc_random_route_by_city("Umeå")
+        customer = Customer(routes, 1, bike, user)
 
-#         bike.start = MagicMock()
-#         bike.stop = MagicMock()
-#         customer.start_bike = MagicMock()
+        bike.start = MagicMock()
+        bike.stop = MagicMock()
+        customer.start_bike = MagicMock()
 
-#         customer.run()
-#         customer.start_bike.assert_called_once()
-#         bike.start.assert_called_once()
+        customer.run()
+        customer.start_bike.assert_called_once()
+        bike.start.assert_called_once()
 
-#     @patch('time.sleep', return_value=None)
-#     def test_start_bike(self, patched_time_sleep):
-#         parkings = [
-#             Parking.create_from_json({'_id': 1, 'city': 'Umeå', 'sw_longitude': '20.260667', 'sw_latitude': '63.824319', 'se_longitude': '20.260667', 'se_latitude': '63.824319', 'ne_longitude': '20.263607', 'ne_latitude': '63.82492', 'nw_longitude': '20.263607', 'nw_latitude': '63.82492', 'created_at': '2022-01-13T12:21:13.000000Z', 'updated_at': '2022-01-13T12:21:13.000000Z'})
-#         ]
+    @patch('time.sleep', return_value=None)
+    def test_start_bike(self, patched_time_sleep):
+        parkings = [
+            Parking.create_from_json({'_id': 1, 'city': 'Umeå', 'sw_longitude': '20.260667', 'sw_latitude': '63.824319', 'se_longitude': '20.260667', 'se_latitude': '63.824319', 'ne_longitude': '20.263607', 'ne_latitude': '63.82492', 'nw_longitude': '20.263607', 'nw_latitude': '63.82492', 'created_at': '2022-01-13T12:21:13.000000Z', 'updated_at': '2022-01-13T12:21:13.000000Z'})
+        ]
 
-#         bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": True, "latitude": 63.827211, "longitude": 20.252348}
-#         bike = Bike.create_from_json(bike_json, parkings)
-#         user_json = {
-#             "_id": "61954fd32cec02b4ff0a2bfd",
-#             "firstname": "Siv",
-#             "lastname": "Björk",
-#             "adress": "Lillvägen 2I",
-#             "postcode": "548 72",
-#             "city": "Umeå",
-#             "phone": "0442-599 96",
-#             "email": "marie.lind@example.org",
-#             "email_verified_at": "2021-11-17T18:54:10.964000Z",
-#             "payment_method": "monthly",
-#             "payment_status": "paid",
-#             "updated_at": "2021-11-17T18:54:11.477000Z",
-#             "created_at": "2021-11-17T18:54:11.477000Z"
-#             }
-#         user = User.create_from_json(user_json)
-#         routes = helpers.calc_random_route_by_city("Umeå")
-#         customer = Customer(routes, 1, bike, user)
+        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": True, "latitude": 63.827211, "longitude": 20.252348}
+        bike = Bike.create_from_json(bike_json, parkings)
+        user_json = {
+            "_id": "61954fd32cec02b4ff0a2bfd",
+            "firstname": "Siv",
+            "lastname": "Björk",
+            "adress": "Lillvägen 2I",
+            "postcode": "548 72",
+            "city": "Umeå",
+            "phone": "0442-599 96",
+            "email": "marie.lind@example.org",
+            "email_verified_at": "2021-11-17T18:54:10.964000Z",
+            "payment_method": "monthly",
+            "payment_status": "paid",
+            "updated_at": "2021-11-17T18:54:11.477000Z",
+            "created_at": "2021-11-17T18:54:11.477000Z"
+            }
+        user = User.create_from_json(user_json)
+        routes = helpers.calc_random_route_by_city("Umeå")
+        customer = Customer(routes, 1, bike, user)
 
-#         bike.move_bike = MagicMock()
-#         bike.start = MagicMock()
-#         bike.stop = MagicMock()
+        bike.move_bike = MagicMock()
+        bike.start = MagicMock()
+        bike.stop = MagicMock()
 
-#         customer.start_bike(bike)
-#         bike.move_bike.assert_called()
+        customer.start_bike(bike)
+        bike.move_bike.assert_called()
 
 
 #################################### Test main ########################################
