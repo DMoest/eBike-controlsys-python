@@ -2,6 +2,9 @@ import unittest
 from app.bike import Bike
 from app.user import User
 from app.parking import Parking
+from services.bike_service import BikeService
+from db.db import Api
+from services.parking_service import ParkingService
 import main
 import utils.helpers as helpers
 from unittest.mock import MagicMock
@@ -161,6 +164,9 @@ class TestCustomer(unittest.TestCase):
 
     @patch('time.sleep', return_value=None)
     def test_start_bike(self, patched_time_sleep):
+        """
+        Test that the move_bike function in bike class is called when using start_bike in Customer class.
+        """
         parkings = [
             Parking.create_from_json({'_id': 1, 'city': 'Umeå', 'sw_longitude': '20.260667', 'sw_latitude': '63.824319', 'se_longitude': '20.260667', 'se_latitude': '63.824319', 'ne_longitude': '20.263607', 'ne_latitude': '63.82492', 'nw_longitude': '20.263607', 'nw_latitude': '63.82492', 'created_at': '2022-01-13T12:21:13.000000Z', 'updated_at': '2022-01-13T12:21:13.000000Z'})
         ]
@@ -194,103 +200,41 @@ class TestCustomer(unittest.TestCase):
         bike.move_bike.assert_called()
 
 
-#################################### Test main ########################################
+#################################### Test bike_service ########################################
+
+    @patch('sys.argv', return_value=[0, 1])
+    def test_init_bike(self, sys_patch):
+        parkings = [
+            Parking.create_from_json({'_id': 1, 'city': 'Umeå', 'sw_longitude': '20.260667', 'sw_latitude': '63.824319', 'se_longitude': '20.260667', 'se_latitude': '63.824319', 'ne_longitude': '20.263607', 'ne_latitude': '63.82492', 'nw_longitude': '20.263607', 'nw_latitude': '63.82492', 'created_at': '2022-01-13T12:21:13.000000Z', 'updated_at': '2022-01-13T12:21:13.000000Z'})
+        ]
+
+        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": True, "latitude": 63.827211, "longitude": 20.252348}
+
+        api = MagicMock()
+        api.return_value = {"bikes": [bike_json]}
+
+        bike_service = BikeService(api, ParkingService)
+        bike_obj = bike_service.init_bike(bike_json)
+
+        self.assertIsInstance(bike_obj, Bike)
 
 
-# class TestMain(unittest.TestCase):
-#     def test_init_bike(self):
-#         """
-#         Test funktion to initialize new Bike object.
-#         """
-#         bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": False, "latitude": 63.827211, "longitude": 20.252348}
-#         bike = main.init_bike(bike_json)
-#         self.assertIsInstance(bike, Bike)
-#         self.assertEqual(bike._id, 1)
+    @patch('sys.argv', return_value=[0, 1])
+    def test_init_bike(self, sys_patch):
+        parkings = [
+            Parking.create_from_json({'_id': 1, 'city': 'Umeå', 'sw_longitude': '20.260667', 'sw_latitude': '63.824319', 'se_longitude': '20.260667', 'se_latitude': '63.824319', 'ne_longitude': '20.263607', 'ne_latitude': '63.82492', 'nw_longitude': '20.263607', 'nw_latitude': '63.82492', 'created_at': '2022-01-13T12:21:13.000000Z', 'updated_at': '2022-01-13T12:21:13.000000Z'})
+        ]
 
+        bike_json = {"_id": 1, "city": "Umeå", "status": "in repair", "active": True, "latitude": 63.827211, "longitude": 20.252348}
 
-#     def test_init_users(self):
-#         """
-#         Test that list of users in main is properly populated.
-#         """
-#         users = [
-#             {
-#                 "_id": "61954fd32cec02b4ff0a2bfd",
-#                 "firstname": "Siv",
-#                 "lastname": "Björk",
-#                 "adress": "Lillvägen 2I",
-#                 "postcode": "548 72",
-#                 "city": "Umeå",
-#                 "phone": "0442-599 96",
-#                 "email": "marie.lind@example.org",
-#                 "email_verified_at": "2021-11-17T18:54:10.964000Z",
-#                 "payment_method": "monthly",
-#                 "payment_status": "paid",
-#                 "updated_at": "2021-11-17T18:54:11.477000Z",
-#                 "created_at": "2021-11-17T18:54:11.477000Z"
-#             },
-#         ]
+        api = MagicMock()
+        api.return_value = {"bikes": [bike_json]}
 
-#         main.init_users(users)
-#         self.assertEqual(len(main.users), 1)
-#         self.assertIsInstance(main.users[0], User)
+        bike_service = BikeService(api, ParkingService)
+        
+        bike_service.init_bikes([bike_json])
 
-#     def test_init_bikes(self):
-#         """
-#         Test that list of bikes in main is properly populated.
-#         """
-#         bikes = [
-#             {
-#                 "_id": 1,
-#                 "city": "Umeå",
-#                 "status": "in repair",
-#                 "active": False,
-#                 "latitude": 63.827211,
-#                 "longitude": 20.252348
-#             }
-#         ]
-
-#         main.init_bikes(bikes)
-#         self.assertEqual(len(main.bikes_in_city["Umeå"]), 1)
-#         self.assertIsInstance(main.bikes[0], Bike)
-
-#     def test_init_processes(self):
-#         """
-#         Test that list of bikes in main is properly populated.
-#         """
-#         users = [
-#             {
-#                 "_id": "61954fd32cec02b4ff0a2bfd",
-#                 "firstname": "Siv",
-#                 "lastname": "Björk",
-#                 "adress": "Lillvägen 2I",
-#                 "postcode": "548 72",
-#                 "city": "Umeå",
-#                 "phone": "0442-599 96",
-#                 "email": "marie.lind@example.org",
-#                 "email_verified_at": "2021-11-17T18:54:10.964000Z",
-#                 "payment_method": "monthly",
-#                 "payment_status": "paid",
-#                 "updated_at": "2021-11-17T18:54:11.477000Z",
-#                 "created_at": "2021-11-17T18:54:11.477000Z"
-#             },
-#         ]
-
-#         bikes = [
-#             {
-#                 "_id": 1,
-#                 "city": "Umeå",
-#                 "status": "in repair",
-#                 "active": False,
-#                 "latitude": 63.827211,
-#                 "longitude": 20.252348
-#             }
-#         ]
-
-#         main.init_users(users)
-#         main.init_bikes(bikes)
-#         main.init_processes(1)
-#         self.assertEqual(len(main.processes), 1)
-#         self.assertIsInstance(main.processes[0], Process)
+        self.assertEqual(len(bike_service.bikes), 1)
 
 
 

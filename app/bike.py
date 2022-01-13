@@ -129,8 +129,6 @@ class Bike():
         speed = random.randint(5, 20)
         power = random.randint(25, 100)
 
-        print(len(json_data))
-
         return cls(
             json_data["_id"],
             speed,
