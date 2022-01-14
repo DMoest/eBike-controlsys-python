@@ -5,6 +5,7 @@ from app.parking import Parking
 from services.bike_service import BikeService
 from db.db import Api
 from services.parking_service import ParkingService
+from services.user_service import UserService
 import main
 import utils.helpers as helpers
 from unittest.mock import MagicMock
@@ -220,7 +221,7 @@ class TestCustomer(unittest.TestCase):
 
 
     @patch('sys.argv', return_value=[0, 1])
-    def test_init_bike(self, sys_patch):
+    def test_init_bikes(self, sys_patch):
         parkings = [
             Parking.create_from_json({'_id': 1, 'city': 'Umeå', 'sw_longitude': '20.260667', 'sw_latitude': '63.824319', 'se_longitude': '20.260667', 'se_latitude': '63.824319', 'ne_longitude': '20.263607', 'ne_latitude': '63.82492', 'nw_longitude': '20.263607', 'nw_latitude': '63.82492', 'created_at': '2022-01-13T12:21:13.000000Z', 'updated_at': '2022-01-13T12:21:13.000000Z'})
         ]
